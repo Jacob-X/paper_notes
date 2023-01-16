@@ -455,3 +455,36 @@ Intrinsic Prompt Tuning
 
 
 ==LoRA: Low-Rank Adaptation of Large Langauge Models, 2021.==
+
++ 不再认为模型是低维的了
++ 认为模型是低秩的
++ 向每个 Transformer layer中注入可训练的秩分解矩阵，减少计算量
+
+![image-20230116111753578](http://picture.jacobx.top/markdown/image-20230116111753578.png)
+
+
+
+
+
+### Delta tuning的理论分析
+
++ 优化角度
+  + 从低维空间中找到一个低维的表示，或者说从低维函数中找到一个低维的表示
+  + ![image-20230116112823010](http://picture.jacobx.top/markdown/image-20230116112823010.png)
++ 最优控制的角度
+  + 在离散的时间状态下寻找最优控制器的过程
+  + ![image-20230116112842145](http://picture.jacobx.top/markdown/image-20230116112842145.png)
+
+
+
+### 组合Delta
+
+可以通过组合不同的Delta方法来得到性能较好的模型，训练模型，让模型选择组合的方式
+
+![image-20230116113044479](http://picture.jacobx.top/markdown/image-20230116113044479.png)
+
+
+
+Delta tuning 有较好的可迁移性，体现了将来完成一个统一平台的可能性
+
+![image-20230116113554697](http://picture.jacobx.top/markdown/image-20230116113554697.png)
