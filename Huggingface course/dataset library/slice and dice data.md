@@ -220,3 +220,71 @@ DatasetDict({
 
 
 
+transformer dataset有Dataset.set_format()方法，这个方法只会改变输出的dataset格式，
+
+把dataset转化为pandas格式的
+
+```python
+drug_dataset.set_format("pandas")
+这样取到的值就是pandas格式的了
+drug_dataset["train"][:3]
+
+
+可以用pandas来创建新列
+train_df = drug_dataset["train"][:]
+frequencies = (
+    train_df["condition"]
+    .value_counts()
+    .to_frame()
+    .reset_index()
+    .rename(columns={"index": "condition", "condition": "frequency"})
+)
+frequencies.head()
+
+
+```
+
+![image-20230213185239019](http://picture.jacobx.top/markdown/image-20230213185239019.png)
+
+```python
+再从pandas的格式变化为dataset格式
+from datasets import Dataset
+
+freq_dataset = Dataset.from_pandas(frequencies)
+freq_dataset
+
+Dataset({
+    features: ['condition', 'frequency'],
+    num_rows: 819
+})
+```
+
+
+
+创建一个validation set
+
+```python
+drug_dataset_clean = drug_dataset["train"].train_test_split(train_size=0.8, seed=42)
+# Rename the default "test" split to "validation"
+drug_dataset_clean["validation"] = drug_dataset_clean.pop("test")
+# Add the "test" set to our `DatasetDict`
+drug_dataset_clean["test"] = drug_dataset["test"]
+drug_dataset_clean
+
+
+DatasetDict({
+    train: Dataset({
+        features: ['patient_id', 'drugName', 'condition', 'review', 'rating', 'date', 'usefulCount', 'review_length', 'review_clean'],
+        num_rows: 110811
+    })
+    validation: Dataset({
+        features: ['patient_id', 'drugName', 'condition', 'review', 'rating', 'date', 'usefulCount', 'review_length', 'review_clean'],
+        num_rows: 27703
+    })
+    test: Dataset({
+        features: ['patient_id', 'drugName', 'condition', 'review', 'rating', 'date', 'usefulCount', 'review_length', 'review_clean'],
+        num_rows: 46108
+    })
+})
+```
+
